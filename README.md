@@ -9,7 +9,7 @@ This repository contains files for building up and run containers for data analy
 Follow these steps:
 
 ```console
-git clone git@repo1.si.unav.es:daim/proyectosBase/data_server.git
+git clone https://github.com/sfl0r3nz05/rstudio_jupyter_server.git
 cd data_server
 docker-compose up -d
 ```
