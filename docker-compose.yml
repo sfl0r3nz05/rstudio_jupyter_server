@@ -1,0 +1,53 @@
+version: "3.3"
+services:
+
+  nginx:
+    build: ./nginx
+    image: myhub_nginx
+    ports:
+      - "9595:443"
+    restart: unless-stopped
+
+  jupyterhub:
+    build: ./jupyterhub
+    image: myhub_jupyterhub
+    ports:
+      - "8000"
+      - "2223:22"
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      #- jupyterhub_data:/srv/jupyterhub
+    environment:
+      - DOCKER_JUPYTER_IMAGE=jupyter/scipy-notebook:42f4c82a07ff
+      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - HUB_IP=jupyterhub
+      - OAUTH_CLIENT_ID=792568687867-ikil9cmtukmt6k50p3fi7373gcjv8uui.apps.googleusercontent.com
+      - OAUTH_CLIENT_SECRET=yDq-J-VEc3LbGzDKVrZJ5f_E
+      - OAUTH_CALLBACK_URL=https://jupyterhub.daimanalytics.193.145.250.207.xip.io:9595/hub/oauth_callback
+    restart: unless-stopped
+
+#  jupyterlab:
+#    image: jupyter/scipy-notebook:42f4c82a07ff
+#    command: echo
+
+  rstudio:
+    build: ./rstudio
+    image: myhub_rstudio
+    ports:
+      - "8787"
+      - "3838"
+      - "2222:22"
+    volumes:
+      - homes:/home
+    environment:
+      ADD: shiny
+      ROOT: 'TRUE'
+      PASSWORD: 'password'
+    restart: unless-stopped
+
+volumes:
+  homes:
+  #jupyterhub_data:
+
+#Enable jupyterhub_data volume to keep track of spawned containers after down and up. Otherwise you must first remove all spawned 
+#containers and then down.
